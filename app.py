@@ -1,7 +1,11 @@
-import sys
+import os
 import json
 import threading
 from flask import Flask, request, Response
+
+
+PORT = os.getenv("PORT", 8000)
+NOT_FOUND_VALUE = os.getenv("NOT_FOUND_VALUE")
 
 
 class SimpleStorage():
@@ -93,9 +97,11 @@ ss = SimpleStorage()
 app = create_app()
 
 
-def my_jsonify(data):
+def my_jsonify(data, status=200):
     # jsonify from Flask only works in debug mode
-    return Response(json.dumps(data, indent=4), mimetype='application/json')
+    return Response(
+        json.dumps(data, indent=4), mimetype='application/json', status=status
+    )
 
 
 @app.route('/<string:context>', methods=['POST'])
@@ -118,7 +124,10 @@ def set_default():
 @app.route('/<string:context>/<string:k>', methods=['GET'])
 def get(context: str, k: str):
     v = ss.get(k, context)
-    return my_jsonify({k: v})
+    if v:
+        return my_jsonify({k: v})
+    else:
+        return my_jsonify({k: NOT_FOUND_VALUE}, status=404)
 
 
 @app.route('/<string:k>', methods=['GET'])
@@ -137,5 +146,4 @@ def dump_default():
     return dump(0)
 
 
-port = int(sys.argv[1]) if len(sys.argv) > 1 else 8000
-app.run(host='0.0.0.0', port=port)
+app.run(host='0.0.0.0', port=PORT)

@@ -19,4 +19,4 @@ ENV PORT=8000
 EXPOSE $PORT
 
 # Run the app
-CMD ["sh", "-c", "python3 app.py $PORT"]
+CMD ["sh", "-c", "python3 app.py"]
