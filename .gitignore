@@ -1,5 +1,7 @@
 # Custom ignores
-my_test.sh
+test.sh
+context-*
+build.sh
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
