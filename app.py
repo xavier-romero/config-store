@@ -1,6 +1,7 @@
+import sys
 import json
 import threading
-from flask import Flask, jsonify, request
+from flask import Flask, request, Response
 
 
 class SimpleStorage():
@@ -71,6 +72,16 @@ class SimpleStorage():
         else:
             return None
 
+    def dump(self, c=0):
+        context = self._context(c, create=False)
+        data = {}
+        if context:
+            data = context.load()
+
+        assert isinstance(data, dict), \
+            f"ERROR: data is not a dict: {data}"
+        return data
+
 
 def create_app():
     app = Flask(__name__)
@@ -82,6 +93,11 @@ ss = SimpleStorage()
 app = create_app()
 
 
+def my_jsonify(data):
+    # jsonify from Flask only works in debug mode
+    return Response(json.dumps(data, indent=4), mimetype='application/json')
+
+
 @app.route('/<string:context>', methods=['POST'])
 def set(context: str):
     data = request.get_json(silent=True)
@@ -91,7 +107,7 @@ def set(context: str):
     for k, v in data.items():
         ss.set(k, v, context)
 
-    return jsonify(data)
+    return my_jsonify(data)
 
 
 @app.route('/', methods=['POST'])
@@ -102,7 +118,7 @@ def set_default():
 @app.route('/<string:context>/<string:k>', methods=['GET'])
 def get(context: str, k: str):
     v = ss.get(k, context)
-    return jsonify({k: v})
+    return my_jsonify({k: v})
 
 
 @app.route('/<string:k>', methods=['GET'])
@@ -110,5 +126,16 @@ def get_default(k: str):
     return get(0, k)
 
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=50061)
+@app.route('/dump/<string:context>', methods=['GET'])
+def dump(context: str):
+    d = ss.dump(context)
+    return my_jsonify(d)
+
+
+@app.route('/', methods=['GET'])
+def dump_default():
+    return dump(0)
+
+
+port = int(sys.argv[1]) if len(sys.argv) > 1 else 8000
+app.run(host='0.0.0.0', port=port)
