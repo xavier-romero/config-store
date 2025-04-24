@@ -1,5 +1,5 @@
 DOCKER_IMAGE = "xavierromero/config-store:latest"
-EXPOSED_PORT = 8000
+EXPOSED_PORT = 5678
 SERVICE_NAME = "config-store"
 
 
@@ -66,7 +66,7 @@ def set(plan, k, v, c=0):
         recipe=post_request_recipe,
         acceptable_codes=[200],
         skip_code_check=False,
-        description="ConfigStore: Setting {0} to {1}".format(k, v),
+        description="ConfigStore: Setting {0} to {1} (context={2})".format(k, v, c),
     )
 
 
@@ -91,18 +91,18 @@ def get(plan, k, c=0):
         recipe=get_request_recipe,
         acceptable_codes=[200, 404],
         skip_code_check=False,
-        description="ConfigStore: Getting value for {}".format(k),
+        description="ConfigStore: Getting value for {0} (context={1})".format(k, c),
     )
 
     if http_response["extract.result"] == "_NOT_FOUND_":
-        plan.print("ConfigStore: Key {} not found".format(k))
+        # plan.print("ConfigStore: Key {} not found".format(k))
         return None
     else:
-        plan.print(
-            "ConfigStore: Key {0} found with value {1}".format(
-                k, http_response["extract.result"]
-            )
-        )
+        # plan.print(
+        #     "ConfigStore: Key {0} found with value {1}".format(
+        #         k, http_response["extract.result"]
+        #     )
+        # )
         return http_response["extract.result"]
 
 
@@ -120,7 +120,7 @@ def dump(plan, c=0):
         recipe=get_request_recipe,
         acceptable_codes=[200],
         skip_code_check=False,
-        description="ConfigStore: Dumping all values",
+        description="ConfigStore: Dumping all values (context={})".format(c),
     )
 
     return http_response["extract.result"]

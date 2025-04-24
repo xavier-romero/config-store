@@ -2,6 +2,7 @@
 test.sh
 context-*
 build.sh
+run.sh
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

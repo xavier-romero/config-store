@@ -2,7 +2,7 @@
 ## Run app
 To run app listening on specific port:
 ```
-python3 app.py 9000
+PORT=9000 python3 app.py
 ```
 
 To run on default port (8000):
@@ -30,7 +30,7 @@ docker run -p 8000:8000 whatever:tag
 - Send data by posting JSON content
 - Retrieve data by querying using key as GET parameter
 
-Example using curl
+Example using curl (assuming the service is running on port 8000)
 ```
 # Send data to default namespace
 curl \
@@ -80,3 +80,6 @@ curl http://localhost:8000/dump/0
 # Retrieve all available data (dump) from custm namespace
 curl http://localhost:8000/dump/custom_namespace
 ```
+
+# Kurtosis
+See [Kurtosis README](kurtosis/README.md)
