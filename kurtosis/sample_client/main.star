@@ -78,3 +78,7 @@ def run(plan, args={}):
     # Retrieve and print the whole dictionary
     retrieved_dict = config_store.get(plan, "sample_dict")
     plan.print("Got dictionary: {}".format(retrieved_dict))
+
+    # Retrieve specific subkeys from the dictionary
+    street = config_store.get(plan, "sample_dict.address.street")
+    plan.print("Got street: {}".format(street))

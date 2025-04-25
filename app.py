@@ -30,6 +30,23 @@ class SimpleStorage():
             print(f"INFO: Reading {k} for c:{self.id}")
             with self.lock:
                 data = self.load()
+            if '.' in k:
+                # if the key contains a dot, treat it as a nested key
+                keys = k.split('.')
+                remaining_keys = keys[1:]
+                for key in keys:
+                    if key not in data:
+                        return None
+                    if not remaining_keys:
+                        # if we don't have remaining keys, return the value
+                        return data.get(key)
+                    if not isinstance(data, dict):
+                        return None
+                    # we still need to iterate through the remaining keys
+                    remaining_keys = remaining_keys[1:]
+                    data = data.get(key)
+            else:
+                # if the key does not contain a dot, return the value directly
                 return data.get(k)
 
         def load(self):
@@ -108,7 +125,10 @@ def my_jsonify(data, status=200):
 def set(context: str):
     data = request.get_json(silent=True)
     if (not data) or (not isinstance(data, dict)):
-        return {}
+        return Response(
+            json.dumps({'error': 'Invalid data'}, indent=4),
+            mimetype='application/json'
+        )
 
     for k, v in data.items():
         ss.set(k, v, context)

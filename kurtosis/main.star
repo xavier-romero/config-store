@@ -82,7 +82,7 @@ def get(plan, k, c=0):
         port_id=SERVICE_NAME,
         endpoint="/{0}/{1}".format(c, k),
         extract={
-            "result": ".{}".format(k),
+            "result": ".\"{}\"".format(k),
         },
     )
 

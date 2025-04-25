@@ -95,6 +95,15 @@ You can also store and retrieve complex data, as long as it's JSON serializable
 
 ```
 
+# Subkeys
+You can also retrieve specific subkeys
+
+```python
+    # Retrieve specific subkeys from the dictionary
+    street = config_store.get(plan, "sample_dict.address.street")
+    plan.print("Got street: {}".format(street))
+```
+
 # Shared data
 As the purpose is to facilitate passing configuration parameters between different .star files as well as between different packages, you can safely include this code in multiple places:
 
