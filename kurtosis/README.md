@@ -125,3 +125,5 @@ Once your kurtosis package is running and as long as ```init()``` has been alrea
 - [http://127.0.0.1:5678](http://127.0.0.1:5678)
 
 Please see [../README.md#usage](../README.md#usage) for detailed examples on how to POST and GET data.
+
+![alt text](img/browser.png)
