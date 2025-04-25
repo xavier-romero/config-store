@@ -1,3 +1,9 @@
+# Description
+This aims to be a simple storage config solution, you can run it standlone anywhere but it's been built with Kurtosis in mind.
+
+For usage within Kurtosis, please refer to that [Kurtosis README](kurtosis/README.md), although description below could be useful to understand the principles.
+
+
 # Run
 ## Run app
 To run app listening on specific port:
@@ -137,6 +143,3 @@ curl http://localhost:8000/package
 curl http://localhost:8000/package.op_contract_deployer_params.image
 
 ```
-
-# Kurtosis
-See [Kurtosis README](kurtosis/README.md)
